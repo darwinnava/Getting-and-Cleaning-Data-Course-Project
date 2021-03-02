@@ -1,7 +1,7 @@
 ---
 title: "Getting and Cleaning Data Course Project"
 author: "Darwin Nava"
-date: "February 2, 2021"
+date: "March 2, 2021"
 file: "run_analysis.R"
 ---
 #[Link to project on GitHUB](https://github.com/darwinnava/Getting-and-Cleaning-Data-Course-Project)
@@ -14,7 +14,7 @@ file: "run_analysis.R"
 # B. Extracts only the measurements on the mean and standard deviation for each measurement. 
 # C. Uses descriptive activity names to name the activities in the data set
 # D. Appropriately labels the data set with descriptive variable names. 
-# E. From the data set in step 4, creates a second, independent tidy data set with the average 
+# E. From the data set in step D, creates a second, independent tidy data set with the average 
 #    of each variable for each activity and each subject.
 
 ## 1. Required Libraries
@@ -98,4 +98,17 @@ mergeddata$idact <- activitylabels[mergeddata$idact, 2]  # Replacing numbers wit
 
 names(mergeddata)<-gsub("Gyro", "Gyroscope", names(mergeddata))
 names(mergeddata)<-gsub("Acc", "Accelerometer", names(mergeddata))
+#names(mergeddata)
 
+# 7. From the data set in step D, creates a second, independent tidy data set with the average 
+#    of each variable for each activity and each subject.
+tidydatafinal <- mergeddata %>%
+  group_by(subject, idact) %>%
+  summarize_all(funs(mean))
+
+names(tidydatafinal)[2] = "activity"
+
+# Writing tidy data for subsequent analysis.
+write.table(tidydatafinal, "tidydataset.txt", row.name=FALSE)
+
+#End
